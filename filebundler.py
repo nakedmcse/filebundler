@@ -18,7 +18,7 @@ def choose_folder():
 
             if filename.endswith('.txt') or filename.endswith('.TXT'):
                 with open(file_path, 'r') as file:
-                    output_file += file.read()
+                    output_file += file.read().replace('\r\n', '\n').replace('\r', '\n')
                     output_text.config(state=tk.NORMAL)
                     output_text.insert(tk.END, f'Added contents of {filename}\n')
                     output_text.config(state=tk.DISABLED)
@@ -27,7 +27,7 @@ def choose_folder():
                     for zip_info in zip_ref.infolist():
                         if zip_info.filename.endswith('.txt'):
                             with zip_ref.open(zip_info) as file:
-                                output_file += file.read().decode('utf-8')
+                                output_file += file.read().decode('utf-8').replace('\r\n', '\n').replace('\r', '\n')
                                 output_text.config(state=tk.NORMAL)
                                 output_text.insert(tk.END, f'Added contents of {filename}\n')
                                 output_text.config(state=tk.DISABLED)
@@ -40,7 +40,7 @@ def save_file():
     file_path = filedialog.asksaveasfilename(defaultextension=".txt")
     if file_path:
         try:
-            with open(file_path, 'w') as file:
+            with open(file_path, 'w', newline='\n') as file:
                 file.write(output_file)
         except Exception as e:
             messagebox.showerror("Error", f"Failed to save file: {e}")
